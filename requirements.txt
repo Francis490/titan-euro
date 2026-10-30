@@ -1,21 +1,2 @@
-name: Test Fase 1
-
-on: [push, workflow_dispatch]
-
-jobs:
-  test-db:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout codice
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Installa dipendenze
-        run: pip install -r requirements.txt
-
-      - name: Esegui test database
-        run: python -c "from database import init_db, count_draws; init_db(); print('Test riuscito! Estrazioni in DB:', count_draws())"
+requests>=2.31.0
+pydantic>=2.5.0
