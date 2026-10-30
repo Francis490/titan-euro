@@ -23,8 +23,8 @@ CREATE TABLE IF NOT EXISTS draws (
     num_3           INTEGER NOT NULL CHECK (num_3 BETWEEN 1 AND 50),
     num_4           INTEGER NOT NULL CHECK (num_4 BETWEEN 1 AND 50),
     num_5           INTEGER NOT NULL CHECK (num_5 BETWEEN 1 AND 50),
-    euro_1          INTEGER NOT NULL CHECK (euro_1 BETWEEN 1 AND 10),
-    euro_2          INTEGER NOT NULL CHECK (euro_2 BETWEEN 1 AND 10),
+    euro_1          INTEGER NOT NULL CHECK (euro_1 BETWEEN 1 AND 12),
+    euro_2          INTEGER NOT NULL CHECK (euro_2 BETWEEN 1 AND 12),
     source          TEXT    NOT NULL DEFAULT 'multipasko.pl',
     fetched_at      TEXT    NOT NULL,
     created_at      TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
