@@ -17,5 +17,8 @@ jobs:
       - name: Installa dipendenze
         run: pip install -r requirements.txt
 
-      - name: Esegui test database
-        run: python -c "from database import init_db, count_draws; init_db(); print('Test riuscito! Estrazioni in DB:', count_draws())"
+      - name: Esegui fetch reale Eurojackpot
+        run: python run_fetch.py
+
+      - name: Mostra i dati estratti dal DB
+        run: sqlite3 titan_euro.db "SELECT * FROM draws;"
