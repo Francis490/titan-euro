@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titan Euro - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --primary: #3b82f6;
+            --accent: #10b981;
+            --text: #f8fafc;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            background-image: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+            width: 90%;
+        }
+        h1 { font-weight: 900; font-size: 1.8rem; margin-bottom: 5px; }
+        p.subtitle { color: #94a3b8; font-size: 0.9rem; margin-bottom: 30px; }
+        .numbers-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .ball {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #2563eb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+        .ball.euro {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+        .timestamp { font-size: 0.8rem; color: #64748b; margin-top: 20px; }
+        .tag {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="tag">ANTI-CROWD ATTIVO</div>
+        <h1>Titan Euro</h1>
+        <p class="subtitle">Sestina ottimizzata per il payout</p>
+        
+        <div class="numbers-container" id="mains">
+            <!-- Numeri principali qui -->
+        </div>
+        
+        <div class="numbers-container" id="euros">
+            <!-- Euronumeri qui -->
+        </div>
+
+        <div class="timestamp" id="time">Caricamento...</div>
+    </div>
+
+    <script>
+        // Fetch dei dati salvati da anti_crowd.py
+        fetch('latest.json')
+            .then(response => response.json())
+            .then(data => {
+                const mainsDiv = document.getElementById('mains');
+                const eurosDiv = document.getElementById('euros');
+                
+                data.main_numbers.forEach(num => {
+                    const el = document.createElement('div');
+                    el.className = 'ball';
+                    el.innerText = num;
+                    mainsDiv.appendChild(el);
+                });
+
+                data.euro_numbers.forEach(num => {
+                    const el = document.createElement('div');
+                    el.className = 'ball euro';
+                    el.innerText = num;
+                    eurosDiv.appendChild(el);
+                });
+
+                document.getElementById('time').innerText = data.timestamp;
+            })
+            .catch(err => {
+                document.getElementById('time').innerText = "Nessun dato generato. Esegui il bot!";
+            });
+    </script>
+</body>
+</html>
