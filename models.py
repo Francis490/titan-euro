@@ -14,21 +14,28 @@ class EurojackpotDraw(BaseModel):
     @field_validator("main_numbers")
     @classmethod
     def validate_main_numbers(cls, v: List[int]) -> List[int]:
-        if len(v) != 5: raise ValueError("Servono 5 numeri")
-        if any(not (1 <= n <= 50) for n in v): raise ValueError("Range 1-50")
-        if len(set(v)) != len(v): raise ValueError("Duplicati")
+        if len(v) != 5: 
+            raise ValueError("Servono esattamente 5 numeri principali")
+        if any(not (1 <= n <= 50) for n in v): 
+            raise ValueError("I numeri principali devono essere in [1, 50]")
+        if len(set(v)) != len(v): 
+            raise ValueError("I numeri principali non possono contenere duplicati")
         return sorted(v)
 
     @field_validator("euro_numbers")
     @classmethod
     def validate_euro_numbers(cls, v: List[int]) -> List[int]:
-        if len(v) != 2: raise ValueError("Servono 2 euronumeri")
-        if any(not (1 <= n <= 10) for n in v): raise ValueError("Range 1-10")
-        if len(set(v)) != len(v): raise ValueError("Duplicati")
+        if len(v) != 2: 
+            raise ValueError("Servono esattamente 2 Euronumeri")
+        if any(not (1 <= n <= 12) for n in v): 
+            raise ValueError("Gli Euronumeri devono essere in [1, 12]")
+        if len(set(v)) != len(v): 
+            raise ValueError("Gli Euronumeri non possono contenere duplicati")
         return sorted(v)
 
     @model_validator(mode="after")
     def validate_disjoint_sets(self) -> "EurojackpotDraw":
         overlap = set(self.main_numbers) & set(self.euro_numbers)
-        if overlap: raise ValueError(f"Overlap: {overlap}")
+        if overlap:
+            raise ValueError(f"Numeri principali ed Euronumeri non possono sovrapporsi: {overlap}")
         return self
