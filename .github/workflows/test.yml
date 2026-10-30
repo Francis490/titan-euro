@@ -1,4 +1,4 @@
-name: Test Fase 1
+name: Test Fase 1 e 2
 
 on: [push, workflow_dispatch]
 
@@ -23,5 +23,5 @@ jobs:
       - name: Esegui Backfill Storico
         run: python backfill.py
 
-      - name: Mostra i dati estratti dal DB
-        run: sqlite3 titan_euro.db "SELECT draw_date, num_1, num_2, num_3, num_4, num_5, euro_1, euro_2 FROM draws ORDER BY draw_date DESC;"
+      - name: Genera Sestina Anti-Crowd Divina
+        run: python anti_crowd.py
