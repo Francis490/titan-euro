@@ -55,6 +55,14 @@ def upsert_draw(draw: EurojackpotDraw, db_path: Optional[Path] = None) -> bool:
         cur = conn.execute(sql, params)
         return cur.rowcount > 0
 
+# QUESTA ERA LA FUNZIONE MANCANTE!
+def get_latest_draw_date(db_path: Optional[Path] = None) -> Optional[date]:
+    with get_connection(db_path) as conn:
+        row = conn.execute("SELECT draw_date FROM draws ORDER BY draw_date DESC LIMIT 1").fetchone()
+    if row is None:
+        return None
+    return date.fromisoformat(row["draw_date"])
+
 def count_draws(db_path: Optional[Path] = None) -> int:
     with get_connection(db_path) as conn:
         row = conn.execute("SELECT COUNT(*) AS n FROM draws").fetchone()
