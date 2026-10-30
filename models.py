@@ -2,7 +2,7 @@
 
 from datetime import date, datetime
 from typing import List
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, Field, field_validator
 
 class EurojackpotDraw(BaseModel):
     draw_date: date
@@ -32,10 +32,3 @@ class EurojackpotDraw(BaseModel):
         if len(set(v)) != len(v): 
             raise ValueError("Gli Euronumeri non possono contenere duplicati")
         return sorted(v)
-
-    @model_validator(mode="after")
-    def validate_disjoint_sets(self) -> "EurojackpotDraw":
-        overlap = set(self.main_numbers) & set(self.euro_numbers)
-        if overlap:
-            raise ValueError(f"Numeri principali ed Euronumeri non possono sovrapporsi: {overlap}")
-        return self
