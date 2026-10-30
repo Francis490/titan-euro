@@ -2,9 +2,8 @@ name: Titan Euro Automazione
 
 on:
   schedule:
-    # Si sveglia il Mercoledì e il Sabato (giorni dopo l'estrazione)
     - cron: '0 8 * * 3,6'
-  workflow_dispatch: # Permette di avviarlo manualmente con un click
+  workflow_dispatch:
 
 jobs:
   update-and-play:
@@ -21,7 +20,6 @@ jobs:
       - name: Installa dipendenze
         run: pip install -r requirements.txt
 
-      # Recupera il database salvato dalla volta precedente
       - name: Ripristina Database SQLite
         uses: actions/cache@v3
         with:
@@ -33,7 +31,10 @@ jobs:
       - name: Esegui Fetch (Scarica ultima estrazione)
         run: python run_fetch.py
 
-      # Salva il database aggiornato prima di spegnersi
+      # NUOVO STEP: Ingoia lo storico dal CSV
+      - name: Esegui Backfill Massivo CSV
+        run: python backfill_csv.py
+
       - name: Salva Database SQLite
         uses: actions/cache@v3
         with:
@@ -43,7 +44,6 @@ jobs:
       - name: Genera Sestina Anti-Crowd (Log)
         run: python anti_crowd.py
 
-      # L'ULTIMO PEZZO: Invia il messaggio a Telegram
       - name: Invia Sestina su Telegram
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
