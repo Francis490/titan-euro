@@ -16,8 +16,8 @@ def run_csv_backfill(file_path="EJ_ab_2022.csv"):
     errors = 0
     
     try:
-        with open(file_path, mode='r', encoding='utf-8') as f:
-            # Il tuo CSV usa il punto e virgola come separatore
+        # Aggiunto errors='ignore' per evitare crash sui caratteri speciali tedeschi
+        with open(file_path, mode='r', encoding='utf-8', errors='ignore') as f:
             reader = csv.reader(f, delimiter=';')
             
             for row in reader:
