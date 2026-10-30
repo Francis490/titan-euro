@@ -1,0 +1,45 @@
+name: Titan Euro Automazione
+
+on:
+  schedule:
+    # Si sveglia il Mercoledì e il Sabato (giorni dopo l'estrazione)
+    # Ore 08:00 UTC (circa le 09:00/10:00 in Italia)
+    - cron: '0 8 * * 3,6'
+  workflow_dispatch: # Permette di avviarlo manualmente con un click
+
+jobs:
+  update-and-play:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout codice
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Installa dipendenze
+        run: pip install -r requirements.txt
+
+      # LA MAGIA: Recupera il database salvato dalla volta precedente
+      - name: Ripristina Database SQLite
+        uses: actions/cache@v3
+        with:
+          path: titan_euro.db
+          key: titan-euro-db-${{ github.run_id }}
+          restore-keys: |
+            titan-euro-db-
+
+      - name: Esegui Fetch (Scarica ultima estrazione)
+        run: python run_fetch.py
+
+      # LA MAGIA 2: Salva il database aggiornato prima di spegnersi
+      - name: Salva Database SQLite
+        uses: actions/cache@v3
+        with:
+          path: titan_euro.db
+          key: titan-euro-db-${{ github.run_id }}
+
+      - name: Genera Sestina Anti-Crowd
+        run: python anti_crowd.py
