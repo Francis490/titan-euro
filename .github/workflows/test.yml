@@ -20,5 +20,8 @@ jobs:
       - name: Esegui fetch reale Eurojackpot
         run: python run_fetch.py
 
+      - name: Esegui Backfill Storico
+        run: python backfill.py
+
       - name: Mostra i dati estratti dal DB
-        run: sqlite3 titan_euro.db "SELECT * FROM draws;"
+        run: sqlite3 titan_euro.db "SELECT draw_date, num_1, num_2, num_3, num_4, num_5, euro_1, euro_2 FROM draws ORDER BY draw_date DESC;"
