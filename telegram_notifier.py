@@ -1,9 +1,11 @@
-"""Modulo per l'invio della sestina su Telegram."""
+"""Modulo per l'invio della sestina su Telegram usando il Jackpot Hunter."""
 
 import os
 import logging
 import requests
-from anti_crowd import DivineAntiCrowdGenerator
+import json
+from pathlib import Path
+from jackpot_hunter import get_hunter_numbers
 
 logger = logging.getLogger(__name__)
 
@@ -12,19 +14,28 @@ def send_telegram_message():
     chat_id = os.getenv("TELEGRAM_CHAT_ID")
 
     if not token or not chat_id:
-        logger.error("Credenziali Telegram mancanti nei Secrets di GitHub.")
+        logger.error("Credenziali Telegram mancanti.")
         return
 
-    # Genera la sestina usando l'algoritmo deterministico
-    generator = DivineAntiCrowdGenerator()
-    mains, euros = generator.generate()
+    # Genera la sestina usando il Jackpot Hunter
+    mains, euros = get_hunter_numbers()
+
+    # Salva per la PWA (Dashboard)
+    data = {
+        "main_numbers": mains,
+        "euro_numbers": euros,
+        "timestamp": "Ultima generazione (Hunter)"
+    }
+    Path("docs").mkdir(exist_ok=True)
+    with open("docs/latest.json", "w") as f:
+        json.dump(data, f, indent=4)
 
     # Formattiamo il messaggio con Markdown
     message = (
-        "🎯 *TITAN EURO - SESTINA DIVINA* 🎯\n\n"
+        "🎯 *TITAN EURO - JACKPOT HUNTER* 🎯\n\n"
         f"🔢 *Numeri Principali:*\n`{', '.join(map(str, mains))}`\n\n"
         f"⭐ *Euronumeri:*\n`{', '.join(map(str, euros))}`\n\n"
-        "🛡️ _Zero numeri < 32, zero recenti, zero caos._\n"
+        "📊 _Algoritmo basato su Bias di Frequenza e Ritardo._\n"
         "🍀 _In bocca al lupo!_"
     )
 
