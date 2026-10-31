@@ -31,7 +31,6 @@ jobs:
       - name: Esegui Fetch (Scarica ultima estrazione)
         run: python run_fetch.py
 
-      # NUOVO STEP: Ingoia lo storico dal CSV
       - name: Esegui Backfill Massivo CSV
         run: python backfill_csv.py
 
@@ -40,6 +39,9 @@ jobs:
         with:
           path: titan_euro.db
           key: titan-euro-db-${{ github.run_id }}
+
+      - name: Caccia al Jackpot (Analisi Bias e Ritardi)
+        run: python jackpot_hunter.py
 
       - name: Genera Sestina Anti-Crowd (Log)
         run: python anti_crowd.py
